@@ -30,7 +30,7 @@
 
 ```
 
-同时添加配置文件`generatorConfig.xml`,使用是请根据项目需要自行修改对应配置
+同时添加配置文件`generatorConfig.xml`,使用的时候请根据项目需要自行修改对应配置
 
 ```xml
 
