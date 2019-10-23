@@ -21,7 +21,8 @@ public class CommentPlugin extends PluginAdapter {
     }
 
     FullyQualifiedJavaType swaggerAnnotation = new FullyQualifiedJavaType("io.swagger.annotations.*");
-    FullyQualifiedJavaType formatAnnotation = new FullyQualifiedJavaType("com.fasterxml.jackson.annotation.JsonFormat");
+    FullyQualifiedJavaType jsonFormat = new FullyQualifiedJavaType("com.fasterxml.jackson.annotation.JsonFormat");
+    FullyQualifiedJavaType dateTimeFormat = new FullyQualifiedJavaType("org.springframework.format.annotation.DateTimeFormat");
 
 
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
@@ -36,7 +37,8 @@ public class CommentPlugin extends PluginAdapter {
 //        topLevelClass.addJavaDocLine(" */");
         topLevelClass.addAnnotation("@ApiModel(\"" + (remark == null ? "" : remark) + "\")");
         topLevelClass.addImportedType(swaggerAnnotation);
-        topLevelClass.addImportedType(formatAnnotation);
+        topLevelClass.addImportedType(jsonFormat);
+        topLevelClass.addImportedType(dateTimeFormat);
         return true;
     }
 
@@ -68,8 +70,9 @@ public class CommentPlugin extends PluginAdapter {
 //        element.addJavaDocLine(" */");
 
         if (introspectedColumn.getJdbcTypeName().equals("TIMESTAMP")) {
-            element.addAnnotation("@ApiModelProperty(value = \"" + (remark == null ? "" : remark) + ",格式 = yyyy-MM-dd HH:mm:ss\")");
+            element.addAnnotation("@ApiModelProperty(value = \"" + (remark == null ? "" : remark) + "\", example = \"yyyy-MM-dd HH:mm:ss\")");
             element.addAnnotation("@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = \"yyyy-MM-dd HH:mm:ss\")");
+            element.addAnnotation("@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")");
         } else {
             element.addAnnotation("@ApiModelProperty(value = \"" + (remark == null ? "" : remark) + "\")");
         }
