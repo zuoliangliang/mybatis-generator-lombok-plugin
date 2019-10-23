@@ -30,6 +30,11 @@ public class CommentPlugin extends PluginAdapter {
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         topLevelClass.getJavaDocLines().clear();
         topLevelClass.addJavaDocLine("/**");
+        String remark = introspectedTable.getRemarks();
+        if (remark != null && remark.length() > 1) {
+            topLevelClass.addJavaDocLine(" * " + remark);
+            topLevelClass.addJavaDocLine(" *");
+        }
         topLevelClass.addJavaDocLine(" * Table: " + introspectedTable.getFullyQualifiedTable());
         topLevelClass.addJavaDocLine(" */");
         return true;
