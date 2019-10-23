@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.itmall</groupId>
             <artifactId>mybatis-generator-lombok-plugin</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </plugin>
