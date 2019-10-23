@@ -22,7 +22,7 @@
     </configuration>
     <dependencies>
         <dependency>
-            <groupId>com.chrm</groupId>
+            <groupId>com.itmall</groupId>
             <artifactId>mybatis-generator-lombok-plugin</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -51,7 +51,7 @@
 		<!-- 带上序列化接口 -->
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
 		<!-- 自定义的注释生成插件-->
-		<plugin type="com.chrm.mybatis.generator.plugins.CommentPlugin">
+		<plugin type="com.itmall.mybatis.generator.plugins.CommentPlugin">
 			<!-- 抑制警告 -->
 			<property name="suppressTypeWarnings" value="true" />
 			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
@@ -60,7 +60,7 @@
 			<property name="suppressDate" value="true" />
 		</plugin>
 		<!-- 整合lombok-->
-		<plugin type="com.chrm.mybatis.generator.plugins.LombokPlugin" >
+		<plugin type="com.itmall.mybatis.generator.plugins.LombokPlugin" >
 			<property name="hasLombok" value="true"/>
 		</plugin>
 
@@ -74,20 +74,20 @@
 		</javaTypeResolver>
 
 		<!-- 实体生成目录配置 -->
-		<javaModelGenerator targetPackage="com.chrm.inforsServer.dataobject"
+		<javaModelGenerator targetPackage="com.itmall.inforsServer.dataobject"
 							targetProject="src/main/java">
 			<property name="enableSubPackages" value="false" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<!-- mapper.xml接口生成目录配置 -->
-		<sqlMapGenerator targetPackage="sqlmap/com/chrm/inforsServer.mapper" targetProject="src/main/resources">
+		<sqlMapGenerator targetPackage="sqlmap/com/itmall/inforsServer.mapper" targetProject="src/main/resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<!-- mapper接口生成目录配置 -->
 		<javaClientGenerator type="XMLMAPPER"
-							 targetPackage="com.chrm.inforsServer" targetProject="src/main/java">
+							 targetPackage="com.itmall.inforsServer" targetProject="src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 

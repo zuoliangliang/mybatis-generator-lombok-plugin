@@ -1,4 +1,4 @@
-package com.chrm.mybatis.generator.plugins;
+package com.itmall.mybatis.generator.plugins;
 
 
 import freemarker.core.ParseException;
