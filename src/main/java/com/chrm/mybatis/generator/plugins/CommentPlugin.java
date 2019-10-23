@@ -3,23 +3,16 @@ package com.chrm.mybatis.generator.plugins;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.java.Field;
-import org.mybatis.generator.api.dom.java.JavaElement;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- *
- *  @Author: GuiRunning 郭贵荣
- *
- *  @Description: 自定义注释生成
- *
- *  @Date: 2018/7/14 0:57
- *
+ * @Author: zuoll
+ * @Description: 自定义注释生成
+ * @Date: 2018/7/14 0:57
  */
 public class CommentPlugin extends PluginAdapter {
 
@@ -27,16 +20,23 @@ public class CommentPlugin extends PluginAdapter {
         return true;
     }
 
+    FullyQualifiedJavaType swaggerAnnotation = new FullyQualifiedJavaType("io.swagger.annotations.*");
+    FullyQualifiedJavaType formatAnnotation = new FullyQualifiedJavaType("com.fasterxml.jackson.annotation.JsonFormat");
+
+
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        topLevelClass.getJavaDocLines().clear();
-        topLevelClass.addJavaDocLine("/**");
+//        topLevelClass.getJavaDocLines().clear();
+//        topLevelClass.addJavaDocLine("/**");
         String remark = introspectedTable.getRemarks();
-        if (remark != null && remark.length() > 1) {
-            topLevelClass.addJavaDocLine(" * " + remark);
-            topLevelClass.addJavaDocLine(" *");
-        }
-        topLevelClass.addJavaDocLine(" * Table: " + introspectedTable.getFullyQualifiedTable());
-        topLevelClass.addJavaDocLine(" */");
+//        if (remark != null && remark.length() > 1) {
+//            topLevelClass.addJavaDocLine(" * " + remark);
+//            topLevelClass.addJavaDocLine(" *");
+//        }
+//        topLevelClass.addJavaDocLine(" * Table: " + introspectedTable.getFullyQualifiedTable());
+//        topLevelClass.addJavaDocLine(" */");
+        topLevelClass.addAnnotation("@ApiModel(\"" + (remark == null ? "" : remark) + "\")");
+        topLevelClass.addImportedType(swaggerAnnotation);
+        topLevelClass.addImportedType(formatAnnotation);
         return true;
     }
 
@@ -54,18 +54,25 @@ public class CommentPlugin extends PluginAdapter {
     }
 
     private void comment(JavaElement element, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
-        element.getJavaDocLines().clear();
-        element.addJavaDocLine("/**");
+//        element.getJavaDocLines().clear();
+//        element.addJavaDocLine("/**");
         String remark = introspectedColumn.getRemarks();
-        if (remark != null && remark.length() > 1) {
-            element.addJavaDocLine(" * " + remark);
-            element.addJavaDocLine(" *");
-        }
+//        if (remark != null && remark.length() > 1) {
+//            element.addJavaDocLine(" * " + remark);
+//            element.addJavaDocLine(" *");
+//        }
+//
+//        element.addJavaDocLine(" * Table:     " + introspectedTable.getFullyQualifiedTable());
+//        element.addJavaDocLine(" * Column:    " + introspectedColumn.getActualColumnName());
+//        element.addJavaDocLine(" * Nullable:  " + introspectedColumn.isNullable());
+//        element.addJavaDocLine(" */");
 
-        element.addJavaDocLine(" * Table:     " + introspectedTable.getFullyQualifiedTable());
-        element.addJavaDocLine(" * Column:    " + introspectedColumn.getActualColumnName());
-        element.addJavaDocLine(" * Nullable:  " + introspectedColumn.isNullable());
-        element.addJavaDocLine(" */");
+        if (introspectedColumn.getJdbcTypeName().equals("TIMESTAMP")) {
+            element.addAnnotation("@ApiModelProperty(value = \"" + (remark == null ? "" : remark) + ",格式 = yyyy-MM-dd HH:mm:ss\")");
+            element.addAnnotation("@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = \"yyyy-MM-dd HH:mm:ss\")");
+        } else {
+            element.addAnnotation("@ApiModelProperty(value = \"" + (remark == null ? "" : remark) + "\")");
+        }
     }
 
     public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
@@ -90,20 +97,20 @@ public class CommentPlugin extends PluginAdapter {
             Iterator<Element> it = es.iterator();
             HashMap map = new HashMap();
 
-            while(true) {
-                while(it.hasNext()) {
-                    Element e = (Element)it.next();
+            while (true) {
+                while (it.hasNext()) {
+                    Element e = (Element) it.next();
                     if (e instanceof TextElement) {
                         it.remove();
                     } else {
-                        XmlElement el = (XmlElement)e;
+                        XmlElement el = (XmlElement) e;
                         List<Attribute> as = el.getAttributes();
                         if (!as.isEmpty()) {
                             String col = null;
                             Iterator i$ = as.iterator();
 
-                            while(i$.hasNext()) {
-                                Attribute a = (Attribute)i$.next();
+                            while (i$.hasNext()) {
+                                Attribute a = (Attribute) i$.next();
                                 if (a.getName().equalsIgnoreCase("column")) {
                                     col = a.getValue();
                                     break;
@@ -137,8 +144,8 @@ public class CommentPlugin extends PluginAdapter {
                 Set<Element> set = map.keySet();
                 Iterator i$ = set.iterator();
 
-                while(i$.hasNext()) {
-                    Element e = (Element)i$.next();
+                while (i$.hasNext()) {
+                    Element e = (Element) i$.next();
                     int id = es.indexOf(e);
                     es.add(id, (Element) map.get(e));
                     es.add(id, new TextElement(""));
@@ -184,8 +191,8 @@ public class CommentPlugin extends PluginAdapter {
                     return;
                 }
 
-                attr = (Attribute)it.next();
-            } while(!attr.getName().equalsIgnoreCase(name));
+                attr = (Attribute) it.next();
+            } while (!attr.getName().equalsIgnoreCase(name));
 
             it.remove();
         }
